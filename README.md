@@ -57,7 +57,7 @@ h2input <- 0.4780 # heritability estimated by an external software (optional)
 # Estimate SNP effects via SumHEM
 df_est <- SumHEM(
   df_gwas = df_gwas, df_map = df_map,
-  h2input = h2input, # if missing, it will be computed during the process
+  # h2input = h2input, # if missing, it will be computed during the process
   ws = ws, NCORES = NCORES, LD_path = LD_path
 )
 ```
