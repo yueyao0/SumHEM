@@ -53,6 +53,12 @@
 #' @references 
 #' ...
 #' 
+#' @importFrom dplyr filter inner_join select mutate distinct
+#' @import Matrix
+#' @importFrom parallel mclapply
+#' @importFrom bigsparser as_SFBM sp_solve_sym
+#' @importFrom bigsnpr snp_ldsc
+#' 
 #' @seealso 
 #' SumHEM tutorial on GitHub page: https://github.com/yueyao0/SumHEM
 #' 
