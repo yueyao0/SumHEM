@@ -42,7 +42,8 @@ panel_color = "#FAE7D9"
     scale_x_continuous(labels = function(x) gsub('^0\\.', '\\.', as.character(x))) +
     scale_y_continuous(labels = function(x) gsub('^0\\.', '\\.', as.character(x))) +
     ylim(c(-0.008,0.008)) +
-    labs(y = "estimates", x = "true effects", tag = "A") +
+    # xlim(c(-0.01,0.01)) +
+    labs(y = "estimates", x = "true effects", tag = "a") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           axis.text.x = element_text(angle = 45, hjust = 1),
@@ -65,7 +66,7 @@ panel_color = "#FAE7D9"
     labs(y = expression(paste("out-of-sample ",r^2)), 
          x = expression(paste("polygenicity (",pi,")")), 
          color = "methods", 
-         tag = "B") +
+         tag = "b") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           legend.position = "right", 
@@ -86,7 +87,7 @@ panel_color = "#FAE7D9"
     labs(y = expression(paste("inferred ",h^2)), 
          x = expression(paste("polygenicity (",pi,")")), 
          color = "methods", 
-         tag = "C") +
+         tag = "c") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           legend.position = "right", 
@@ -106,7 +107,7 @@ panel_color = "#FAE7D9"
     labs(y = "macro F1-score", 
          x = expression(paste("polygenicity (",pi,")")), 
          color = "methods", 
-         tag = "D") +
+         tag = "d") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           legend.position = "right", 
@@ -125,7 +126,7 @@ panel_color = "#FAE7D9"
     labs(y = "mean effects", 
          x = "32 bins", 
          fill =  "methods", 
-         tag = "E") +
+         tag = "e") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           axis.text.x = element_blank(), 
@@ -135,7 +136,7 @@ panel_color = "#FAE7D9"
           legend.position = "none", 
           plot.tag = element_text(face = "bold"))
   p_sim_meanbins_true_h20.5 <- ggplot(data = df_eval_meanbins_sum_melt %>% 
-                                  filter(h2==0.5 & pi==0.7 & method%in%c("True"))) +
+                                        filter(h2==0.5 & pi==0.7 & method%in%c("True"))) +
     geom_boxplot(mapping = aes(x = as.factor(bins), y = value, fill = method, color = method)) +
     geom_hline(yintercept = 0, linetype = "dashed", colour = dashed_color) +
     facet_wrap(facets = vars(method), nrow = 1) +
@@ -162,6 +163,8 @@ p_row2 <- ggpubr::ggarrange(p_sim_r2_h20.5,p_sim_h2_h20.5,p_sim_macrof1_h20.5, n
                             common.legend = TRUE, legend = "bottom")
 p_row3 <- ggpubr::ggarrange(p_sim_meanbins_h20.5,p_sim_meanbins_true_h20.5, ncol = 2, nrow = 1, widths = c(3.3,1))
 figure_1 <- ggpubr::ggarrange(p_row1,p_row2,p_row3, ncol = 1, nrow = 3, heights = c(1.5,1,0.8))
+ggsave(plot = figure_1, height = 6.5, width = 6, 
+       filename = paste0(workpath,"/plots/Fig1.png"))
 ##### ----- ----- ----- ----- figure 2 ----- ----- ----- ----- #####
 {
   p_sim_r2_all <- ggplot(data = df_eval_r2_sum_melt %>% filter(statistic=="r2val" & !method%in%c("GWAS","True")) %>% 
@@ -182,7 +185,7 @@ figure_1 <- ggpubr::ggarrange(p_row1,p_row2,p_row3, ncol = 1, nrow = 3, heights 
     labs(y = expression(paste("out-of-sample ",r^2)), 
          x = expression(paste("polygenicity (",pi,")")), 
          color = "methods", 
-         tag = "A") +
+         tag = "a") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           strip.text.x = element_text(size = 10), 
@@ -211,7 +214,7 @@ figure_1 <- ggpubr::ggarrange(p_row1,p_row2,p_row3, ncol = 1, nrow = 3, heights 
     labs(y = expression(paste("inferred ",h^2)), 
          x = expression(paste("polygenicity (",pi,")")), 
          color = "methods", 
-         tag = "B") +
+         tag = "b") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           strip.text.x = element_text(size = 10), 
@@ -236,7 +239,7 @@ figure_1 <- ggpubr::ggarrange(p_row1,p_row2,p_row3, ncol = 1, nrow = 3, heights 
     labs(y = "macro F1-score", 
          x = expression(paste("polygenicity (",pi,")")), 
          color = "methods", 
-         tag = "C") +
+         tag = "c") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           strip.text.x = element_text(size = 10), 
@@ -245,7 +248,9 @@ figure_1 <- ggpubr::ggarrange(p_row1,p_row2,p_row3, ncol = 1, nrow = 3, heights 
           plot.tag = element_text(face = "bold"))
 }
 figure_2 <- ggpubr::ggarrange(p_sim_r2_all,p_sim_h2_all,p_sim_macrof1_all, ncol = 1, nrow = 3, 
-                                common.legend = TRUE, legend = "top")
+                              common.legend = TRUE, legend = "top")
+ggsave(plot = figure_2, height = 7, width = 6, 
+       filename = paste0(workpath,"/plots/Fig2.png"))
 ##### ----- ----- ----- ----- figure 3 ----- ----- ----- ----- #####
 {
   p_sim_meanbins_all <- ggplot(data = df_eval_meanbins_sum_melt %>% 
@@ -302,6 +307,8 @@ figure_2 <- ggpubr::ggarrange(p_sim_r2_all,p_sim_h2_all,p_sim_macrof1_all, ncol 
           plot.tag = element_text(face = "bold"))
 }
 figure_3 <- ggpubr::ggarrange(p_sim_meanbins_all,p_sim_meanbins_true, ncol = 2, nrow = 1, widths = c(2.5,1))
+ggsave(plot = figure_3, height = 3.5, width = 6, 
+       filename = paste0(workpath,"/plots/Fig3.png"))
 ##### ----- ----- ----- ----- figure 4 ----- ----- ----- ----- #####
 {
   p_real_r2 <- ggplot(data = df_eval_real %>% mutate(winner = ifelse(r2_val_auto_LDpred>r2_val_2_RRpred,"LDpred2-auto","SumHEM")) %>% 
@@ -321,7 +328,7 @@ figure_3 <- ggpubr::ggarrange(p_sim_meanbins_all,p_sim_meanbins_true, ncol = 2, 
          y = expression(paste("SumHEM ",r^2)), 
          color = "Winner", 
          size = expression(paste("Estimated ",pi)), 
-         tag = "A") +
+         tag = "a") +
     theme_bw() +
     theme(axis.text = element_text(color = "black", size = 18), 
           axis.title = element_text(size = 20), 
@@ -344,7 +351,7 @@ figure_3 <- ggpubr::ggarrange(p_sim_meanbins_all,p_sim_meanbins_true, ncol = 2, 
     lims(y = c(0,155)) +
     labs(y = "# of traits", 
          x = "polygenicity", 
-         tag = "B") +
+         tag = "b") +
     theme_bw() +
     theme(axis.text = element_text(color = "black", size = 13),
           axis.title.x = element_text(size = 15),
@@ -368,7 +375,7 @@ figure_3 <- ggpubr::ggarrange(p_sim_meanbins_all,p_sim_meanbins_true, ncol = 2, 
     labs(x = expression(paste("SumHEM ",r^2," - ","LDpred2-auto ",r^2)), 
          y = "# of traits", 
          color = "polygenicity", 
-         tag = "C") +
+         tag = "c") +
     theme_classic() +
     theme(axis.text = element_text(color = "black", size = 18), 
           axis.title.x = element_text(size = 18), 
@@ -395,7 +402,7 @@ figure_3 <- ggpubr::ggarrange(p_sim_meanbins_all,p_sim_meanbins_true, ncol = 2, 
     scale_y_continuous(labels = function(x) gsub('^0\\.', '\\.', as.character(x))) +
     labs(x = expression(paste("LDSC ",h^2)), 
          y = expression(paste("inferred ",h^2)), 
-         tag = "D") +
+         tag = "d") +
     theme_test() +
     theme(axis.text = element_text(color = "black", size = 16), 
           axis.title = element_text(size = 18), 
@@ -414,6 +421,8 @@ p_col <- p_real_r2 +
   annotation_custom(grob = ggplotGrob(p_real_r2_count), xmin = 0.175, xmax = 0.265, ymin = -0.01, ymax = 0.09)
 p_row <- ggpubr::ggarrange(p_real_r2_diff,p_real_h2, ncol = 2, nrow = 1)
 figure_4 <- ggpubr::ggarrange(p_col,p_row, ncol = 1, nrow = 2, heights = c(10,3))
+ggsave(plot = figure_4, height = 13, width = 10, 
+       filename = paste0(workpath,"/plots/Fig4.png"))
 ##### ----- ----- ----- ----- figure 5 ----- ----- ----- ----- #####
 {
   p_real_mht <- ggplot(data = df_beta_realID_melt %>% filter(method %in% c("GWAS","LDpred2-auto","RR","SumHEM")) %>% 
@@ -436,7 +445,7 @@ figure_4 <- ggpubr::ggarrange(p_col,p_row, ncol = 1, nrow = 2, heights = c(10,3)
     labs(title = expression(paste("Malignant melanoma (",hat(pi)==0.103,")")), # paste0(phenoDSCP," (pi = ",round(pipi,4),")")
          x = "chromosome", 
          y = "estimates", 
-         tag = "A") +
+         tag = "a") +
     theme_bw() +
     theme(axis.text = element_text(color = "black", size = 14), 
           axis.title = element_text(size = 20), 
@@ -454,7 +463,7 @@ figure_4 <- ggpubr::ggarrange(p_col,p_row, ncol = 1, nrow = 2, heights = c(10,3)
     scale_y_continuous(labels = function(x) gsub('^0\\.', '\\.', as.character(x))) +
     labs(y = "SumHEM", 
          x = "SumRR", 
-         tag = "B") +
+         tag = "b") +
     theme_classic() +
     theme(axis.title = element_text(size = 18), 
           axis.text = element_text(size = 12, color = "black"), 
@@ -468,7 +477,7 @@ figure_4 <- ggpubr::ggarrange(p_col,p_row, ncol = 1, nrow = 2, heights = c(10,3)
     scale_y_continuous(labels = scales::label_comma()) +
     labs(y = "# of SNP", 
          x = "hat values", 
-         tag = "C") +
+         tag = "c") +
     theme_classic() +
     theme(axis.title.x = element_text(size = 18), 
           axis.title.y = element_text(size = 18), 
@@ -496,7 +505,7 @@ figure_4 <- ggpubr::ggarrange(p_col,p_row, ncol = 1, nrow = 2, heights = c(10,3)
     scale_y_continuous(labels = function(x) gsub('^0\\.', '\\.', as.character(x))) +
     labs(x = expression(paste("LDSC ",h^2)), 
          y = expression(paste("inferred ",h^2)), 
-         tag = "D") +
+         tag = "d") +
     theme_test() +
     theme(axis.text = element_text(color = "black", size = 16), 
           axis.title = element_text(size = 18), 
@@ -513,6 +522,8 @@ figure_4 <- ggpubr::ggarrange(p_col,p_row, ncol = 1, nrow = 2, heights = c(10,3)
 p_col <- ggpubr::ggarrange(p_real_sca,p_real_hv, ncol = 1, nrow = 2)
 p_row <- ggpubr::ggarrange(p_real_mht,p_col, ncol = 2, nrow = 1, widths = c(3,1))
 figure_5 <- ggpubr::ggarrange(p_row,p_real_h2, ncol = 1, nrow = 2, heights = c(6,3.5))
+ggsave(plot = figure_5, height = 9.5, width = 12, 
+       filename = paste0(workpath,"/plots/Fig5.png"))
 ##### ----- ----- ----- ----- figure 6 ----- ----- ----- ----- #####
 {
   p_sim_r2_h2input <- ggplot(data = df_eval_r2_sum_h2input_melt %>% filter(statistic=="r2val" & method%in%c("RR","SumHEM")) %>% 
@@ -532,7 +543,7 @@ figure_5 <- ggpubr::ggarrange(p_row,p_real_h2, ncol = 1, nrow = 2, heights = c(6
     labs(y = expression(paste("out-of-sample ",r^2)), 
          x = expression(paste("input of ",h^2)), 
          color = NULL, fill = NULL, 
-         tag = "A") +
+         tag = "a") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           legend.position = "right", 
@@ -555,7 +566,7 @@ figure_5 <- ggpubr::ggarrange(p_row,p_real_h2, ncol = 1, nrow = 2, heights = c(6
     labs(y = expression(paste("inferred ",h^2)), 
          x = expression(paste("input of ",h^2)), 
          color = NULL, fill = NULL, 
-         tag = "B") +
+         tag = "b") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           legend.position = "right", 
@@ -577,7 +588,7 @@ figure_5 <- ggpubr::ggarrange(p_row,p_real_h2, ncol = 1, nrow = 2, heights = c(6
     labs(y = "macro F1-score", 
          x = expression(paste("input of ",h^2)), 
          color = NULL, fill = NULL, 
-         tag = "C") +
+         tag = "c") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           legend.position = "right", 
@@ -596,7 +607,7 @@ figure_5 <- ggpubr::ggarrange(p_row,p_real_h2, ncol = 1, nrow = 2, heights = c(6
     labs(y = "mean effects", 
          x = "32 bins", 
          fill = "methods", 
-         tag = "D") +
+         tag = "d") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           axis.text.x = element_blank(), 
@@ -632,7 +643,9 @@ figure_5 <- ggpubr::ggarrange(p_row,p_real_h2, ncol = 1, nrow = 2, heights = c(6
 p_col <- ggpubr::ggarrange(p_sim_r2_h2input,p_sim_h2_h2input,p_sim_macrof1_h2input, ncol = 1, nrow = 3, 
                            common.legend = TRUE, legend = "bottom")
 p_row <- ggpubr::ggarrange(p_sim_meanbins_h2input,p_sim_meanbins_true_h2input, ncol = 2, nrow = 1, widths = c(1.65,1))
-figure_6 <- ggpubr::ggarrange(p_col,p_row, ncol = 2, nrow = 1, widths = c(1.2,3))
+figure_supp_1 <- ggpubr::ggarrange(p_col,p_row, ncol = 2, nrow = 1, widths = c(1.2,3))
+ggsave(plot = figure_supp_1, height = 6, width = 8, 
+       filename = paste0(workpath,"/plots/FigSupp1.png"))
 ##### ----- ----- ----- ----- figure 7 ----- ----- ----- ----- #####
 {
   p_sim_r2_ws <- ggplot(data = df_eval_r2_sum_ws_melt %>% filter(statistic=="r2val" & method%in%c("RR","SumHEM")) %>% 
@@ -651,7 +664,7 @@ figure_6 <- ggpubr::ggarrange(p_col,p_row, ncol = 2, nrow = 1, widths = c(1.2,3)
     labs(y = expression(paste("out-of-sample ",r^2)), 
          x = "window size", 
          color = NULL, fill = NULL, 
-         tag = "A") +
+         tag = "a") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           legend.position = "right", 
@@ -673,7 +686,7 @@ figure_6 <- ggpubr::ggarrange(p_col,p_row, ncol = 2, nrow = 1, widths = c(1.2,3)
     labs(y = expression(paste("inferred ",h^2)), 
          x = "window size", 
          color = NULL, fill = NULL, 
-         tag = "B") +
+         tag = "b") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           legend.position = "right", 
@@ -694,7 +707,7 @@ figure_6 <- ggpubr::ggarrange(p_col,p_row, ncol = 2, nrow = 1, widths = c(1.2,3)
     labs(y = "macro F1-score", 
          x = "window size", 
          color = NULL, fill = NULL, 
-         tag = "C") +
+         tag = "c") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           legend.position = "right", 
@@ -715,7 +728,7 @@ figure_6 <- ggpubr::ggarrange(p_col,p_row, ncol = 2, nrow = 1, widths = c(1.2,3)
     labs(y = "mean effects", 
          x = "32 bins", 
          fill =  "methods", 
-         tag = "D") +
+         tag = "d") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           axis.text.x = element_blank(), 
@@ -753,7 +766,9 @@ figure_6 <- ggpubr::ggarrange(p_col,p_row, ncol = 2, nrow = 1, widths = c(1.2,3)
 p_col <- ggpubr::ggarrange(p_sim_r2_ws,p_sim_h2_ws,p_sim_macrof1_ws, ncol = 1, nrow = 3, 
                            common.legend = TRUE, legend = "bottom")
 p_row <- ggpubr::ggarrange(p_sim_meanbins_ws,p_sim_meanbins_true_ws, ncol = 2, nrow = 1, widths = c(1.65,1))
-figure_7 <- ggpubr::ggarrange(p_col,p_row, ncol = 2, nrow = 1, widths = c(1.2,3))
+figure_supp_2 <- ggpubr::ggarrange(p_col,p_row, ncol = 2, nrow = 1, widths = c(1.2,3))
+ggsave(plot = figure_supp_2, height = 6, width = 8, 
+       filename = paste0(workpath,"/plots/FigSupp2.png"))
 ##### ----- ----- ----- ----- figure 8 ----- ----- ----- ----- #####
 {
   p_sim_h2se <- ggplot(data = df_eval_h2_sum %>% filter(pi%in%c(0.1,0.3,0.5,0.7)) %>% 
@@ -773,7 +788,7 @@ figure_7 <- ggpubr::ggarrange(p_col,p_row, ncol = 2, nrow = 1, widths = c(1.2,3)
     scale_y_continuous(labels = function(x) gsub('^0\\.', '\\.', as.character(x))) +
     labs(y = expression(paste("se of inferred ",h^2)), 
          x = expression(paste("polygenicity (",pi,")")), 
-         tag = "A") +
+         tag = "a") +
     theme_classic() +
     theme(axis.text = element_text(color = "black"), 
           strip.background = element_rect(fill = "white", color = "white"), 
@@ -789,7 +804,7 @@ figure_7 <- ggpubr::ggarrange(p_col,p_row, ncol = 2, nrow = 1, widths = c(1.2,3)
     facet_wrap(facets = vars(mylabel), nrow = 1, labeller = labeller(mylabel=label_parsed)) +
     labs(y = expression(paste("inferred ",h^2)), 
          x = "method", 
-         tag = "B") +
+         tag = "b") +
     theme_classic() +
     scale_color_manual(values = c(ls_color$LDpred_auto[1], ls_color$LDpred_auto[2], ls_color$RRpred_2[1])) +
     scale_fill_manual(values = c(ls_color$LDpred_auto[1], ls_color$LDpred_auto[2], ls_color$RRpred_2[1])) +
@@ -801,6 +816,7 @@ figure_7 <- ggpubr::ggarrange(p_col,p_row, ncol = 2, nrow = 1, widths = c(1.2,3)
           strip.background = element_rect(fill = "white", color = "white"), 
           plot.tag = element_text(face = "bold"))
 }
-figure_8 <- ggpubr::ggarrange(p_sim_h2se,p_sim_updateh2, ncol = 1)
-
+figure_supp_3 <- ggpubr::ggarrange(p_sim_h2se,p_sim_updateh2, ncol = 1)
+ggsave(plot = figure_supp_3, height = 4, width = 6, 
+       filename = paste0(workpath,"/plots/FigSupp3.png"))
 
